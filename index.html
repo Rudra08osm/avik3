@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Niyati · 11.11.2026</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <!-- Google Fonts: Cormorant Garamond & Inter & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', '"Cormorant Garamond"', 'serif'],
+            cormorant: ['"Cormorant Garamond"', 'serif'],
+            sans: ['"Inter"', 'sans-serif'],
+          },
+          colors: {
+            midnight: '#07090e',
+            deepNavy: '#0c0f18',
+            gold: {
+              300: '#fae498',
+              400: '#f5d061',
+              500: '#e5ba42',
+              600: '#c59a27',
+            },
+            electricViolet: '#8b5cf6',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom glow & glass tokens */
+    body {
+      background-color: #07090e;
+      color: #f1f3f9;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .glow-gold-text {
+      text-shadow: 0 0 24px rgba(245, 208, 97, 0.45), 0 0 60px rgba(245, 208, 97, 0.2);
+    }
+    
+    .glow-violet-text {
+      text-shadow: 0 0 25px rgba(139, 92, 246, 0.5), 0 0 50px rgba(139, 92, 246, 0.25);
+    }
+
+    .glass-card {
+      background: rgba(16, 20, 32, 0.65);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid rgba(245, 208, 97, 0.16);
+      box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.65), 0 0 20px -5px rgba(139, 92, 246, 0.1);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(245, 208, 97, 0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 25px 60px -8px rgba(0, 0, 0, 0.8), 0 0 30px 2px rgba(245, 208, 97, 0.15);
+    }
+
+    .cosmic-gradient-bg {
+      background: radial-gradient(circle at 50% 20%, rgba(35, 23, 62, 0.6) 0%, rgba(12, 15, 24, 0.95) 60%, #07090e 100%);
+    }
+
+    /* Ambient drifting orbs */
+    @keyframes floatSlow {
+      0%, 100% { transform: translate(0px, 0px) scale(1); }
+      50% { transform: translate(30px, -25px) scale(1.1); }
+    }
+
+    @keyframes floatReverse {
+      0%, 100% { transform: translate(0px, 0px) scale(1.05); }
+      50% { transform: translate(-25px, 20px) scale(0.95); }
+    }
+
+    .animate-float-1 {
+      animation: floatSlow 12s ease-in-out infinite;
+    }
+    .animate-float-2 {
+      animation: floatReverse 15s ease-in-out infinite;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #07090e;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(245, 208, 97, 0.25);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(245, 208, 97, 0.5);
+    }
+
+    /* Photo Card */
+    .photo-reveal-card {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(245, 208, 97, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(139, 92, 246, 0.12),
+        0 20px 60px -10px rgba(0,0,0,0.75),
+        0 0 40px -8px rgba(245, 208, 97, 0.18);
+      animation: photoReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+
+    @keyframes photoReveal {
+      0%   { opacity: 0; transform: scale(0.9) translateY(24px); filter: blur(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0);     filter: blur(0); }
+    }
+
+    .photo-reveal-card img {
+      width: 100%;
+      display: block;
+      height: auto;
+      object-fit: contain;
+      background: #07090e;
+      filter: contrast(1.05) brightness(0.95);
+    }
+
+    .photo-reveal-card:hover img { filter: contrast(1.05) brightness(1); }
+
+    .photo-overlay-gradient {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .photo-caption {
+      position: relative;
+      padding: 20px 20px 18px;
+      background: linear-gradient(135deg, rgba(18, 20, 32, 0.98), rgba(12, 15, 24, 0.98));
+    }
+
+    /* Floating hearts animation */
+    @keyframes heartFloat {
+      0%   { opacity: 0; transform: translateY(0) scale(0.6); }
+      20%  { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-80px) scale(1.2); }
+    }
+
+    .heart-float {
+      position: absolute;
+      font-size: 18px;
+      animation: heartFloat 2.4s ease-out forwards;
+      pointer-events: none;
+    }
+
+    /* Music Player */
+    #music-player {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 20px;
+      border-radius: 9999px;
+      background: rgba(16, 20, 32, 0.80);
+      border: 1px solid rgba(245, 208, 97, 0.30);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(245, 208, 97, 0.1);
+      animation: slideUpFade 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes slideUpFade {
+      from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
+    #music-player .music-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: rgba(245, 208, 97, 0.85);
+      white-space: nowrap;
+    }
+
+    #music-player .music-label span.artist {
+      display: block;
+      font-size: 9px;
+      color: rgba(203, 213, 225, 0.5);
+      letter-spacing: 0.15em;
+      margin-top: 1px;
+    }
+
+    @keyframes musicPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 208, 97, 0.4); }
+      50% { transform: scale(1.06); box-shadow: 0 0 0 6px rgba(245, 208, 97, 0); }
+    }
+
+    .music-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(245, 208, 97, 0.12);
+      border: 1px solid rgba(245, 208, 97, 0.35);
+      color: rgba(245, 208, 97, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .music-btn:hover { background: rgba(245, 208, 97, 0.22); border-color: rgba(245, 208, 97, 0.7); }
+    .music-btn.playing { animation: musicPulse 2s ease-in-out infinite; }
+
+    /* Equaliser bars */
+    .eq-bars { display: flex; align-items: flex-end; gap: 2px; height: 16px; }
+    .eq-bar {
+      width: 3px;
+      border-radius: 2px;
+      background: rgba(245, 208, 97, 0.75);
+      animation: none;
+    }
+    .eq-bars.active .eq-bar:nth-child(1) { animation: eq1 0.7s ease-in-out infinite alternate; }
+    .eq-bars.active .eq-bar:nth-child(2) { animation: eq2 0.5s ease-in-out infinite alternate; }
+    .eq-bars.active .eq-bar:nth-child(3) { animation: eq3 0.9s ease-in-out infinite alternate; }
+    .eq-bars.active .eq-bar:nth-child(4) { animation: eq1 0.6s ease-in-out 0.1s infinite alternate; }
+
+    @keyframes eq1 { from { height: 4px; } to { height: 14px; } }
+    @keyframes eq2 { from { height: 8px; } to { height: 4px; } }
+    @keyframes eq3 { from { height: 12px; } to { height: 6px; } }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-gold-400 selection:text-midnight">
+
+  <!-- Hidden Audio -->
+  <audio id="birthday-audio" preload="auto">
+    <source src="avikgf.mp3" type="audio/mpeg">
+    <source src="avikgf.mpeg" type="audio/mpeg">
+  </audio>
+
+  <!-- Floating Music Player (shown after box open) -->
+  <div id="music-player">
+    <div class="eq-bars" id="eq-bars">
+      <div class="eq-bar" style="height:6px"></div>
+      <div class="eq-bar" style="height:10px"></div>
+      <div class="eq-bar" style="height:4px"></div>
+      <div class="eq-bar" style="height:12px"></div>
+    </div>
+    <div class="music-label">
+      A Song for You
+      <span class="artist">🎵 From Avik Mishra</span>
+    </div>
+    <!-- Play/Pause -->
+    <button class="music-btn" id="music-play-pause" onclick="toggleSong()" title="Play / Pause">
+      <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11.596 8.697L4.5 12.878V3.121l7.096 4.576a.14.14 0 0 1 0 1z"/>
+      </svg>
+      <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16" style="display:none">
+        <path d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5zm5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5z"/>
+      </svg>
+    </button>
+    <!-- Replay -->
+    <button class="music-btn" onclick="replaySong()" title="Replay from start">
+      <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"/>
+        <path fill-rule="evenodd" d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Fixed Ambient Lighting Layers & Fog -->
+  <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <!-- Midnight Violet Glow Orb -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[34rem] h-[34rem] bg-violet-900/25 rounded-full blur-[110px] animate-float-1"></div>
+    <!-- Deep Amber/Gold Subtle Glow Orb -->
+    <div class="absolute top-1/3 -left-20 w-[26rem] h-[26rem] bg-amber-600/10 rounded-full blur-[100px] animate-float-2"></div>
+    <!-- Bottom Midnight Cyan Glow -->
+    <div class="absolute -bottom-20 right-0 w-[30rem] h-[30rem] bg-indigo-900/20 rounded-full blur-[120px]"></div>
+    
+    <!-- Subtle Star Dust Noise Layer -->
+    <div class="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:32px_32px] opacity-[0.06]"></div>
+  </div>
+
+  <!-- Mobile Frame Container (centered for high-fidelity mobile-first preview) -->
+  <div class="relative z-10 max-w-md mx-auto min-h-screen flex flex-col justify-between shadow-2xl bg-midnight/80 border-x border-white/5 backdrop-blur-md">
+
+    <!-- ========================================== -->
+    <!-- SCREEN 1: THE SURPRISE BOX (Landing View) -->
+    <!-- ========================================== -->
+    <div id="screen-landing" class="relative min-h-screen flex flex-col items-center justify-between p-6 transition-all duration-1000 ease-out z-20">
+      
+      <!-- Top Header / Date Stamp -->
+      <header class="w-full text-center pt-8">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-gold-400/20 bg-gold-400/5 backdrop-blur-md mb-4">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold-400 animate-ping"></span>
+          <span class="text-[11px] tracking-[0.25em] uppercase text-gold-300 font-medium font-sans">Special Edition · 11.11.2026</span>
+        </div>
+        
+        <h1 class="text-5xl sm:text-6xl font-serif text-white font-normal tracking-wide glow-gold-text mb-2">
+          Niyati
+        </h1>
+        <p class="text-xs uppercase tracking-[0.35em] text-violet-300/80 font-sans font-medium">
+          A Celestial Moment
+        </p>
+      </header>
+
+      <!-- Centered 3D Interactive Canvas & Box -->
+      <div class="relative w-full aspect-square flex items-center justify-center my-auto cursor-pointer group" id="gift-touch-area" onclick="openSurpriseBox()">
+        <!-- 3D Scene Viewport -->
+        <div id="threejs-gift-container" class="w-full h-full relative z-10"></div>
+
+        <!-- Ambient Glow behind the box -->
+        <div class="absolute inset-16 bg-gradient-to-tr from-violet-600/30 via-gold-400/20 to-transparent rounded-full blur-3xl pointer-events-none group-hover:scale-110 transition-transform duration-700"></div>
+
+        <!-- Floating Light Leak Ring -->
+        <div class="absolute inset-0 border border-gold-400/20 rounded-full scale-90 animate-pulse pointer-events-none opacity-40"></div>
+      </div>
+
+      <!-- Bottom Hint & Action Area -->
+      <footer class="w-full text-center pb-8 flex flex-col items-center gap-3">
+        <p class="text-sm font-light text-slate-300/90 tracking-wide font-sans">
+          Something is waiting for you.
+        </p>
+
+        <!-- Tap to open button / pill -->
+        <button 
+          id="btn-tap-to-open"
+          onclick="openSurpriseBox()"
+          class="group relative inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-gradient-to-r from-white/[0.08] to-white/[0.03] border border-gold-400/30 hover:border-gold-400/80 backdrop-blur-xl transition-all duration-500 shadow-lg hover:shadow-gold-400/20 active:scale-95"
+        >
+          <!-- Shimmer line -->
+          <span class="absolute inset-0 rounded-full overflow-hidden">
+            <span class="absolute -inset-full bg-gradient-to-r from-transparent via-gold-400/20 to-transparent group-hover:translate-x-full transition-transform duration-1000"></span>
+          </span>
+
+          <svg class="w-4 h-4 text-gold-400 transition-transform duration-300 group-hover:rotate-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
+          <span class="text-xs uppercase font-medium tracking-[0.25em] text-white group-hover:text-gold-300 transition-colors">
+            Tap to open
+          </span>
+          <span class="w-1.5 h-1.5 rounded-full bg-gold-400/80 animate-ping"></span>
+        </button>
+
+        <span class="text-[10px] tracking-wider text-slate-500 uppercase mt-1">Touch or click the box to unlock</span>
+      </footer>
+
+      <!-- Light burst transition flash overlay -->
+      <div id="flash-burst" class="fixed inset-0 bg-white opacity-0 pointer-events-none transition-opacity duration-700 z-50"></div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- SCREEN 2: THE SURPRISE PAGE (After Open) -->
+    <!-- ========================================== -->
+    <div id="screen-surprise" class="hidden opacity-0 translate-y-12 transition-all duration-1000 ease-out flex flex-col p-6 min-h-screen">
+      
+      <!-- Top Navigation & Return control -->
+      <header class="w-full flex items-center justify-between pt-6 pb-4 border-b border-white/5">
+        <button onclick="resetToScreenOne()" class="text-xs uppercase tracking-widest text-slate-400 hover:text-gold-300 flex items-center gap-1.5 transition-colors group">
+          <svg class="w-3.5 h-3.5 transform group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+          <span>Box</span>
+        </button>
+        <span class="text-[11px] uppercase tracking-[0.3em] text-gold-400/80 font-mono">11 · 11 · 2026</span>
+        <div class="w-7 h-7 rounded-full bg-violet-500/10 border border-violet-400/20 flex items-center justify-center">
+          <span class="text-xs text-violet-300">✦</span>
+        </div>
+      </header>
+
+      <!-- Hero Header -->
+      <section class="py-10 text-center relative">
+        <!-- Soft decorative glow -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-gold-400/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <p class="text-xs uppercase tracking-[0.35em] text-violet-300 font-sans font-medium mb-3">
+          A Celebration Of You
+        </p>
+
+        <h2 class="text-4xl sm:text-5xl font-serif text-white font-normal leading-tight glow-gold-text">
+          Happy Birthday,<br/>
+          <span class="italic font-light text-gold-300">Niyati</span>
+        </h2>
+
+        <div class="mt-4 flex items-center justify-center gap-3">
+          <span class="h-[1px] w-10 bg-gradient-to-r from-transparent to-gold-400/40"></span>
+          <p class="text-sm tracking-[0.3em] font-light text-slate-300 font-sans">
+            11 · 11 · 2026
+          </p>
+          <span class="h-[1px] w-10 bg-gradient-to-l from-transparent to-gold-400/40"></span>
+        </div>
+      </section>
+
+      <!-- Intro Subtitle -->
+      <div class="text-center px-4 mb-8">
+        <p class="text-xs leading-relaxed text-slate-400 font-light">
+          A quiet constellation of thoughts gathered for this milestone. Read them slowly, whenever you need a reminder.
+        </p>
+      </div>
+
+      <!-- ✨ Cinematic Photo Reveal -->
+      <div class="photo-reveal-card mb-8 mx-1" id="photo-card" style="animation-delay: 0.3s;">
+        <img src="niyati.jpg" alt="Niyati" draggable="false" />
+        <div class="photo-overlay-gradient"></div>
+
+        <!-- Floating hearts container -->
+        <div id="hearts-container" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+
+        <!-- Caption overlay -->
+        <div class="photo-caption">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-gold-400/70 font-sans mb-1">The star of today</p>
+          <h3 class="font-serif text-2xl text-white font-normal glow-gold-text leading-tight">
+            Niyati ✦
+          </h3>
+          <p class="text-[11px] text-slate-300/60 mt-1 font-light tracking-wide">11 · 11 · 2026 &nbsp;·&nbsp; A beautiful soul</p>
+        </div>
+
+        <!-- Gold shimmer border sweep -->
+        <div class="absolute inset-0 rounded-[24px] pointer-events-none"
+             style="background: linear-gradient(135deg, rgba(245,208,97,0.08) 0%, transparent 50%, rgba(139,92,246,0.06) 100%);"></div>
+      </div>
+
+      <!-- Glass Quote Cards Collection (5-6 meaningful quotes) -->
+      <section class="space-y-4 pb-12 flex-1">
+
+        <!-- Card 1 -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-violet-600/10 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-400/70 text-xs">01</span>
+            <div class="h-[1px] w-6 bg-gold-400/30"></div>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400">Honesty & Grace</span>
+          </div>
+          <p class="font-cormorant text-xl text-slate-100 font-normal leading-relaxed italic">
+            “You don’t have to love your birthday to be worth celebrating.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400 font-light">
+            <span>Just being here is enough</span>
+            <span class="text-gold-400/60 font-serif">✦</span>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-gold-400/10 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-400/70 text-xs">02</span>
+            <div class="h-[1px] w-6 bg-gold-400/30"></div>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400">Gentle Presence</span>
+          </div>
+          <p class="font-cormorant text-xl text-slate-100 font-normal leading-relaxed italic">
+            “Some people make ordinary days feel lighter. You’re one of them.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400 font-light">
+            <span>Quiet warmth that stays</span>
+            <span class="text-gold-400/60 font-serif">✦</span>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-indigo-500/10 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-400/70 text-xs">03</span>
+            <div class="h-[1px] w-6 bg-gold-400/30"></div>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400">Growth</span>
+          </div>
+          <p class="font-cormorant text-xl text-slate-100 font-normal leading-relaxed italic">
+            “Another year of you becoming more you.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400 font-light">
+            <span>Unapologetic, authentic evolution</span>
+            <span class="text-gold-400/60 font-serif">✦</span>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-violet-500/10 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-400/70 text-xs">04</span>
+            <div class="h-[1px] w-6 bg-gold-400/30"></div>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400">Quiet Strength</span>
+          </div>
+          <p class="font-cormorant text-xl text-slate-100 font-normal leading-relaxed italic">
+            “Be proud of how far you’ve come, quietly and on your own terms.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400 font-light">
+            <span>No validation required</span>
+            <span class="text-gold-400/60 font-serif">✦</span>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group">
+          <div class="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full pointer-events-none"></div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-400/70 text-xs">05</span>
+            <div class="h-[1px] w-6 bg-gold-400/30"></div>
+            <span class="text-[10px] uppercase tracking-widest text-slate-400">Peace & Time</span>
+          </div>
+          <p class="font-cormorant text-xl text-slate-100 font-normal leading-relaxed italic">
+            “May this chapter bring you soft mornings, quiet certainty, and dreams that unfold effortlessly.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-slate-400 font-light">
+            <span>A gentle blessing</span>
+            <span class="text-gold-400/60 font-serif">✦</span>
+          </div>
+        </article>
+
+        <!-- Card 6 (Bonus personalized message) -->
+        <article class="glass-card rounded-2xl p-6 relative overflow-hidden group border-gold-400/30 bg-gradient-to-b from-white/[0.07] to-white/[0.02]">
+          <div class="flex items-center gap-2 mb-3">
+            <span class="text-gold-300 text-xs">06</span>
+            <div class="h-[1px] w-6 bg-gold-400/50"></div>
+            <span class="text-[10px] uppercase tracking-widest text-gold-300">Wishes for 11.11</span>
+          </div>
+          <p class="font-cormorant text-xl text-white font-normal leading-relaxed italic">
+            “Never diminish your light to make others comfortable. You carry worlds inside you.”
+          </p>
+          <div class="mt-4 pt-3 border-t border-white/5 flex items-center justify-between text-[11px] text-gold-300/80 font-light">
+            <span>Keep shining quietly</span>
+            <span class="text-violet-400 font-serif">✦</span>
+          </div>
+        </article>
+
+      </section>
+
+      <!-- Bottom Audio / Interactive Replay Note -->
+      <footer class="pt-4 pb-10 text-center border-t border-white/5">
+        <button onclick="resetToScreenOne()" class="inline-flex items-center gap-2 px-6 py-2.5 rounded-full border border-gold-400/25 bg-gold-400/5 hover:bg-gold-400/10 text-xs uppercase tracking-widest text-gold-300 transition-all">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </svg>
+          <span>Replay Surprise</span>
+        </button>
+        <p class="text-[11px] text-slate-500 mt-4 tracking-wider uppercase">
+          Crafted with care for Niyati
+        </p>
+        <p class="text-[13px] font-cormorant italic text-gold-300/70 mt-1 tracking-wide glow-gold-text">
+          — With love, Avik Mishra ✦
+        </p>
+      </footer>
+
+    </div>
+
+  </div>
+
+  <!-- Interactive Three.js Script Injection & Box Interaction Handler -->
+  <script>
+    // Embedded 3D Scene Initialization
+    (function initThreeBox() {
+      const container = document.getElementById('threejs-gift-container');
+      if (!container) return;
+
+      const width = container.clientWidth || 360;
+      const height = container.clientHeight || 360;
+
+      const scene = new THREE.Scene();
+      scene.fog = new THREE.FogExp2(0x07090e, 0.04);
+
+      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+      camera.position.set(0, 0.7, 5.2);
+
+      const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.35;
+      container.appendChild(renderer.domElement);
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0x2d214a, 2.0);
+      scene.add(ambientLight);
+
+      const keyLight = new THREE.PointLight(0xf5d061, 4.0, 14);
+      keyLight.position.set(2.5, 3.5, 3.5);
+      scene.add(keyLight);
+
+      const rimLight = new THREE.PointLight(0x8b5cf6, 4.5, 12);
+      rimLight.position.set(-3.2, 2.5, -2.5);
+      scene.add(rimLight);
+
+      const insideLight = new THREE.PointLight(0xffdf88, 1.2, 8);
+      insideLight.position.set(0, 0.25, 0);
+      scene.add(insideLight);
+
+      // Gift Box Group
+      const giftGroup = new THREE.Group();
+      scene.add(giftGroup);
+
+      // Materials
+      const boxMaterial = new THREE.MeshPhysicalMaterial({
+        color: 0x141824,
+        metalness: 0.2,
+        roughness: 0.35,
+        clearcoat: 0.9,
+        clearcoatRoughness: 0.15
+      });
+
+      const goldRibbonMaterial = new THREE.MeshStandardMaterial({
+        color: 0xf5cf60,
+        metalness: 0.88,
+        roughness: 0.2,
+        emissive: 0x6e5210,
+        emissiveIntensity: 0.45
+      });
+
+      // Box Base
+      const baseMesh = new THREE.Mesh(new THREE.BoxGeometry(1.6, 1.3, 1.6), boxMaterial);
+      baseMesh.position.y = -0.15;
+      giftGroup.add(baseMesh);
+
+      // Base Ribbons
+      const ribbonX = new THREE.Mesh(new THREE.BoxGeometry(1.62, 1.31, 0.28), goldRibbonMaterial);
+      ribbonX.position.y = -0.15;
+      giftGroup.add(ribbonX);
+
+      const ribbonZ = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.31, 1.62), goldRibbonMaterial);
+      ribbonZ.position.y = -0.15;
+      giftGroup.add(ribbonZ);
+
+      // Lid Group
+      const lidGroup = new THREE.Group();
+      lidGroup.position.set(0, 0.55, 0);
+      giftGroup.add(lidGroup);
+
+      const lidMesh = new THREE.Mesh(new THREE.BoxGeometry(1.72, 0.32, 1.72), boxMaterial);
+      lidGroup.add(lidMesh);
+
+      const lidRibbonX = new THREE.Mesh(new THREE.BoxGeometry(1.74, 0.33, 0.28), goldRibbonMaterial);
+      lidGroup.add(lidRibbonX);
+
+      const lidRibbonZ = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.33, 1.74), goldRibbonMaterial);
+      lidGroup.add(lidRibbonZ);
+
+      // Bow
+      const bowCenter = new THREE.Mesh(new THREE.SphereGeometry(0.18, 16, 16), goldRibbonMaterial);
+      bowCenter.position.y = 0.2;
+      lidGroup.add(bowCenter);
+
+      const loopGeo = new THREE.TorusGeometry(0.26, 0.08, 12, 24);
+      const loop1 = new THREE.Mesh(loopGeo, goldRibbonMaterial);
+      loop1.position.set(-0.25, 0.28, 0);
+      loop1.rotation.y = Math.PI / 4;
+      loop1.rotation.z = Math.PI / 6;
+      lidGroup.add(loop1);
+
+      const loop2 = new THREE.Mesh(loopGeo, goldRibbonMaterial);
+      loop2.position.set(0.25, 0.28, 0);
+      loop2.rotation.y = -Math.PI / 4;
+      loop2.rotation.z = -Math.PI / 6;
+      lidGroup.add(loop2);
+
+      // Drifting Ambient Particles
+      const particleCount = 200;
+      const pGeometry = new THREE.BufferGeometry();
+      const pPositions = new Float32Array(particleCount * 3);
+      for (let i = 0; i < particleCount; i++) {
+        pPositions[i * 3] = (Math.random() - 0.5) * 12;
+        pPositions[i * 3 + 1] = (Math.random() - 0.5) * 10;
+        pPositions[i * 3 + 2] = (Math.random() - 0.5) * 8;
+      }
+      pGeometry.setAttribute('position', new THREE.BufferAttribute(pPositions, 3));
+      const pMaterial = new THREE.PointsMaterial({
+        color: 0xd8b4fe,
+        size: 0.045,
+        transparent: true,
+        opacity: 0.7,
+        blending: THREE.AdditiveBlending
+      });
+      const particles = new THREE.Points(pGeometry, pMaterial);
+      scene.add(particles);
+
+      // Sparkle Burst on opening
+      const burstCount = 100;
+      const burstGeo = new THREE.BufferGeometry();
+      const burstPos = new Float32Array(burstCount * 3);
+      const burstVel = [];
+      for (let i = 0; i < burstCount; i++) {
+        burstPos[i * 3] = 0;
+        burstPos[i * 3 + 1] = 0.3;
+        burstPos[i * 3 + 2] = 0;
+        burstVel.push({
+          x: (Math.random() - 0.5) * 0.14,
+          y: Math.random() * 0.16 + 0.05,
+          z: (Math.random() - 0.5) * 0.14
+        });
+      }
+      burstGeo.setAttribute('position', new THREE.BufferAttribute(burstPos, 3));
+      const burstMat = new THREE.PointsMaterial({
+        color: 0xffdf88,
+        size: 0.09,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending
+      });
+      const burstParticles = new THREE.Points(burstGeo, burstMat);
+      scene.add(burstParticles);
+
+      // Motion State
+      let isOpened = false;
+      let lidY = 0;
+      let lidRotZ = 0;
+      let lidRotX = 0;
+
+      window.triggerThreeBoxOpen = function() {
+        isOpened = true;
+        burstMat.opacity = 1.0;
+      };
+
+      window.resetThreeBox = function() {
+        isOpened = false;
+        lidY = 0;
+        lidRotZ = 0;
+        lidRotX = 0;
+        lidGroup.position.set(0, 0.55, 0);
+        lidGroup.rotation.set(0, 0, 0);
+        insideLight.intensity = 1.2;
+        burstMat.opacity = 0;
+        for (let i = 0; i < burstCount; i++) {
+          burstPos[i * 3] = 0;
+          burstPos[i * 3 + 1] = 0.3;
+          burstPos[i * 3 + 2] = 0;
+        }
+        burstGeo.attributes.position.needsUpdate = true;
+      };
+
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsedTime = clock.getElapsedTime();
+
+        if (!isOpened) {
+          giftGroup.rotation.y = Math.sin(elapsedTime * 0.75) * 0.32;
+          giftGroup.rotation.x = Math.cos(elapsedTime * 0.5) * 0.1;
+          giftGroup.position.y = Math.sin(elapsedTime * 1.6) * 0.1;
+
+          // Glowing lid breathing effect
+          lidGroup.position.y = 0.55 + Math.sin(elapsedTime * 2.5) * 0.025;
+          insideLight.intensity = 1.5 + Math.sin(elapsedTime * 3) * 1.0;
+        } else {
+          // Open lid upward with tilt
+          lidY = THREE.MathUtils.lerp(lidY, 2.6, 0.045);
+          lidRotZ = THREE.MathUtils.lerp(lidRotZ, 0.9, 0.04);
+          lidRotX = THREE.MathUtils.lerp(lidRotX, -0.65, 0.04);
+          lidGroup.position.y = 0.55 + lidY;
+          lidGroup.rotation.z = lidRotZ;
+          lidGroup.rotation.x = lidRotX;
+
+          insideLight.intensity = THREE.MathUtils.lerp(insideLight.intensity, 12, 0.06);
+
+          // Animate sparkles
+          const p = burstGeo.attributes.position.array;
+          for (let i = 0; i < burstCount; i++) {
+            p[i * 3] += burstVel[i].x;
+            p[i * 3 + 1] += burstVel[i].y;
+            p[i * 3 + 2] += burstVel[i].z;
+            burstVel[i].y -= 0.0028;
+          }
+          burstGeo.attributes.position.needsUpdate = true;
+          burstMat.opacity = Math.max(0, burstMat.opacity - 0.008);
+
+          giftGroup.rotation.y += 0.015;
+        }
+
+        particles.rotation.y = elapsedTime * 0.025;
+        renderer.render(scene, camera);
+      }
+
+      animate();
+
+      window.addEventListener('resize', () => {
+        const w = container.clientWidth || 360;
+        const h = container.clientHeight || 360;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+      });
+    })();
+
+    // Page Transition Controller
+    function openSurpriseBox() {
+      // 0. ★ START AUDIO IMMEDIATELY inside the click handler (before any setTimeout)
+      //    This satisfies browser autoplay policy — must be synchronous with user gesture.
+      const audio = document.getElementById('birthday-audio');
+      audio.currentTime = 0;
+      audio.volume = 1.0;
+      const playPromise = audio.play();
+
+      // 1. Trigger 3D lid open & burst
+      if (window.triggerThreeBoxOpen) window.triggerThreeBoxOpen();
+
+      const flash = document.getElementById('flash-burst');
+      const screenLanding = document.getElementById('screen-landing');
+      const screenSurprise = document.getElementById('screen-surprise');
+
+      // 2. Flash burst effect
+      flash.classList.remove('opacity-0');
+      flash.classList.add('opacity-85');
+
+      setTimeout(() => {
+        flash.classList.remove('opacity-85');
+        flash.classList.add('opacity-0');
+
+        // 3. Fade out screen 1
+        screenLanding.classList.add('opacity-0', 'scale-95');
+
+        setTimeout(() => {
+          screenLanding.classList.add('hidden');
+          screenSurprise.classList.remove('hidden');
+
+          // 4. Reveal screen 2 with smooth transition
+          setTimeout(() => {
+            screenSurprise.classList.remove('opacity-0', 'translate-y-12');
+            screenSurprise.classList.add('opacity-100', 'translate-y-0');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            // 5. Show player UI & hearts (audio already playing)
+            showPlayerUI();
+            spawnHearts();
+          }, 50);
+
+        }, 500);
+
+      }, 600);
+    }
+
+    // ── Audio Controls ──────────────────────────────────────────
+    const audio = document.getElementById('birthday-audio');
+    const player = document.getElementById('music-player');
+    const eqBars = document.getElementById('eq-bars');
+    const iconPlay = document.getElementById('icon-play');
+    const iconPause = document.getElementById('icon-pause');
+    const playPauseBtn = document.getElementById('music-play-pause');
+
+    function showPlayerUI() {
+      player.style.display = 'flex';
+      setPlayingUI(true);
+    }
+
+    function playSong() {
+      player.style.display = 'flex';
+      audio.currentTime = 0;
+      audio.volume = 1.0;
+      audio.play().then(() => {
+        setPlayingUI(true);
+      }).catch(() => {
+        // Fallback: show play button so user can tap manually
+        setPlayingUI(false);
+      });
+      spawnHearts();
+    }
+
+    function spawnHearts() {
+      const container = document.getElementById('hearts-container');
+      if (!container) return;
+      const emojis = ['🩷','💜','✨','💛','🌸','💖'];
+      let spawned = 0;
+      const interval = setInterval(() => {
+        if (spawned >= 14) { clearInterval(interval); return; }
+        const heart = document.createElement('span');
+        heart.className = 'heart-float';
+        heart.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        heart.style.left = (10 + Math.random() * 80) + '%';
+        heart.style.bottom = (8 + Math.random() * 30) + '%';
+        heart.style.animationDelay = (Math.random() * 0.4) + 's';
+        heart.style.fontSize = (14 + Math.random() * 12) + 'px';
+        container.appendChild(heart);
+        heart.addEventListener('animationend', () => heart.remove());
+        spawned++;
+      }, 160);
+    }
+
+    function replaySong() {
+      audio.currentTime = 0;
+      audio.play().then(() => {
+        setPlayingUI(true);
+        spawnHearts();
+      }).catch(() => {});
+    }
+
+    function toggleSong() {
+      if (audio.paused) {
+        audio.play().then(() => setPlayingUI(true)).catch(() => {});
+      } else {
+        audio.pause();
+        setPlayingUI(false);
+      }
+    }
+
+    function setPlayingUI(isPlaying) {
+      if (isPlaying) {
+        iconPlay.style.display = 'none';
+        iconPause.style.display = 'block';
+        playPauseBtn.classList.add('playing');
+        eqBars.classList.add('active');
+      } else {
+        iconPlay.style.display = 'block';
+        iconPause.style.display = 'none';
+        playPauseBtn.classList.remove('playing');
+        eqBars.classList.remove('active');
+      }
+    }
+
+    audio.addEventListener('ended', () => setPlayingUI(false));
+
+    function resetToScreenOne() {
+      const screenLanding = document.getElementById('screen-landing');
+      const screenSurprise = document.getElementById('screen-surprise');
+
+      if (window.resetThreeBox) window.resetThreeBox();
+
+      // Pause song & hide player when going back
+      audio.pause();
+      audio.currentTime = 0;
+      setPlayingUI(false);
+      player.style.display = 'none';
+
+      screenSurprise.classList.add('opacity-0', 'translate-y-12');
+      setTimeout(() => {
+        screenSurprise.classList.add('hidden');
+        screenLanding.classList.remove('hidden');
+
+        setTimeout(() => {
+          screenLanding.classList.remove('opacity-0', 'scale-95');
+          screenLanding.classList.add('opacity-100', 'scale-100');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 50);
+      }, 500);
+    }
+  </script>
+
+</body>
+</html>
